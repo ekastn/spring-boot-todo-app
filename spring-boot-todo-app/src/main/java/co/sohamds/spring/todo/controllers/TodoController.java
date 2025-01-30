@@ -12,49 +12,47 @@ import co.sohamds.spring.todo.repository.TodoRepository;
 
 @Controller
 public class TodoController {
-	@Autowired
-	TodoRepository todoRepository;
-	
-	@GetMapping
-	public String index() {
-	return "index.html";
-}
+    @Autowired
+    TodoRepository todoRepository;
 
-@GetMapping("/todos")
-public String todos(Model model) {
-model.addAttribute("todos", todoRepository.findAll());
-return "todos";
-}
+    @GetMapping
+    public String index() {
+        return "index.html";
+    }
 
-@PostMapping("/todoNew")
-public String add(@RequestParam String todoItem, @RequestParam
-	String status, Model model) {
-	Todo todo = new Todo(todoItem, status);
-	todo.setTodoItem(todoItem);
-	todo.setCompleted(status);
-	todoRepository.save(todo);
-	model.addAttribute("todos", todoRepository.findAll());
-	return "redirect:/todos";
-}
+    @GetMapping("/todos")
+    public String todos(Model model) {
+        model.addAttribute("todos", todoRepository.findAll());
+        return "todos";
+    }
 
-@PostMapping("/todoDelete/{id}")
-public String delete(@PathVariable long id, Model model) {
-	todoRepository.deleteById(id);
-	model.addAttribute("todos", todoRepository.findAll());
-	return "redirect:/todos"; 
-}
+    @PostMapping("/todoNew")
+    public String add(@RequestParam String todoItem, @RequestParam String status, Model model) {
+        Todo todo = new Todo(todoItem, status);
+        todo.setTodoItem(todoItem);
+        todo.setCompleted(status);
+        todoRepository.save(todo);
+        model.addAttribute("todos", todoRepository.findAll());
+        return "redirect:/todos";
+    }
 
-@PostMapping("/todoUpdate/{id}")
-public String update(@PathVariable long id, Model model) {
-	Todo todo = todoRepository.findById(id).get();
-	if("Yes".equals(todo.getCompleted())) {
-	todo.setCompleted("No");
-	}
-	else {
-	todo.setCompleted("Yes");
-	}
-	todoRepository.save(todo);
-	model.addAttribute("todos", todoRepository.findAll());
-	return "redirect:/todos";
-}
+    @PostMapping("/todoDelete/{id}")
+    public String delete(@PathVariable long id, Model model) {
+        todoRepository.deleteById(id);
+        model.addAttribute("todos", todoRepository.findAll());
+        return "redirect:/todos";
+    }
+
+    @PostMapping("/todoUpdate/{id}")
+    public String update(@PathVariable long id, Model model) {
+        Todo todo = todoRepository.findById(id).get();
+        if ("Yes".equals(todo.getCompleted())) {
+            todo.setCompleted("No");
+        } else {
+            todo.setCompleted("Yes");
+        }
+        todoRepository.save(todo);
+        model.addAttribute("todos", todoRepository.findAll());
+        return "redirect:/todos";
+    }
 }
